@@ -1,0 +1,14 @@
+@import url('../../styles/normalize.css');
+
+body {
+    width: 100%;
+    background: #131316;
+    color: #F2F2F3;
+    overflow: hidden;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}

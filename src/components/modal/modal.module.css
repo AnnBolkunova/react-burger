@@ -1,0 +1,27 @@
+.container {
+    width: 720px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--background);
+    border-radius: 40px;
+    box-sizing: border-box;
+}
+
+.header {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+}
+
+.header_title {
+    composes: header;
+    justify-content: space-between;
+}
+
+.header_no_title {
+    composes: header;
+    justify-content: flex-end;
+}

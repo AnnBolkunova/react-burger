@@ -1,0 +1,32 @@
+.container {
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+}
+
+.image {
+    width: 480px;
+    height: 240px;
+}
+
+.content {
+    margin: 0;
+    padding: 32px 0 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.content_item {
+    width: 120px;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+
+

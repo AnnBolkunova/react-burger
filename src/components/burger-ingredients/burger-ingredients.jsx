@@ -40,7 +40,7 @@ const BurgerIngredients = ({data}) => {
                     Начинки
                 </Tab>
             </nav>
-            <ul className={`${ingredients.common_list} custom-scroll`}>
+            <ul className={ingredients.common_list}>
                 <li>
                     <IngredientsGroup
                         name="Булки"

@@ -26,7 +26,7 @@ const BurgerConstructor = ({data}) => {
     return (
         <section className={constructorBurger.section}>
             <div className={constructorBurger.list}>
-                <div className='pl-8'>
+                <div className={constructorBurger.bun}>
                     <ConstructorElement
                         type="top"
                         isLocked={true}
@@ -35,10 +35,10 @@ const BurgerConstructor = ({data}) => {
                         thumbnail={'https://code.s3.yandex.net/react/code/bun-02.png'}
                     />
                 </div>
-                <ul className={`${constructorBurger.fillings} custom-scroll`}>
+                <ul className={constructorBurger.fillings}>
                     {data && data.map((item) =>
                         item.type !== 'bun' &&
-                        <li key={item._id} style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                        <li key={item._id} className={constructorBurger.fillings_item}>
                             <DragIcon type="primary"/>
                             <ConstructorElement
                                 text={item.name}
@@ -48,7 +48,7 @@ const BurgerConstructor = ({data}) => {
                         </li>
                     )}
                 </ul>
-                <div className='pl-8'>
+                <div className={constructorBurger.bun}>
                     <ConstructorElement
                         type="bottom"
                         isLocked={true}

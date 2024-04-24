@@ -12,7 +12,7 @@ const IngredientItem = ({item, openDetailsModal}) => {
     return (
         <div className={itemStyles.container}>
             <div className={itemStyles.block} onClick={handleClick}>
-                <img src={item.image} alt='bun'/>
+                <img src={item.image} alt={item.name}/>
                 <div className={itemStyles.price}>
                     <p className='text text_type_digits-default'>{item.price}</p>
                     <CurrencyIcon type="primary"/>

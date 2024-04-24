@@ -7,7 +7,7 @@ const IngredientDetails = ({ingredient}) => {
         <div className={ingredientDetails.container}>
             <img className={ingredientDetails.image}
                  src={ingredient.image_large}
-                 alt='ingredient'
+                 alt={ingredient.name}
             />
             <h3 className='text text_type_main-medium pt-4'>{ingredient.name}</h3>
             <ul className={ingredientDetails.content}>

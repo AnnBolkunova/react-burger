@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import './app.css';
+import app from './app.module.css';
 import api from "../../utils/api";
 import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
@@ -15,9 +15,7 @@ const App = () => {
                 .then((res) => {
                     setData(res.data)
                 })
-                .catch(err =>
-                    console.log(err)
-                )
+                .catch(console.error)
         }
 
         getIngredients();
@@ -26,7 +24,7 @@ const App = () => {
     return (
         <>
             <AppHeader/>
-            <main className='main'>
+            <main className={app.main}>
                 <BurgerIngredients
                     data={data}
                 />

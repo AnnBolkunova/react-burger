@@ -7,20 +7,31 @@
 .list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
     padding: 100px 16px 0;
 }
 
 .fillings {
+    width: 568px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: calc(100% + 1em);
+    gap: 16px;
     max-height: calc(100vh - 510px);
     overflow: auto;
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0 12px 0 0;
+}
+
+.fillings_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bun {
+    composes: fillings_item;
+    justify-content: flex-end;
 }
 
 .order {

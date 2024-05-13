@@ -1,81 +1,145 @@
-import {useState} from "react";
+import {useCallback, useRef} from "react";
+import {useSelector, useDispatch} from "react-redux";
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientsGroup from "./ingredients-group/ingredients-group";
 import Modal from "../modal/modal";
 import IngredientDetails from "./ingredient-details/ingredient-details";
-import ingredients from './burger-ingredients.module.css';
-import PropTypes from 'prop-types';
-import {dataPropTypes} from "../../utils/types";
+import {switchTab} from "../../services/slices/ingredientsSlice";
+import {
+    showDetails,
+    closeDetails,
+} from "../../services/slices/ingredientDetailsSlice";
+import stylesIng from './burger-ingredients.module.css';
 
-const BurgerIngredients = ({data}) => {
+const BurgerIngredients = () => {
 
-    const [current, setCurrent] = useState('buns');
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+    const dispatch = useDispatch();
+    const {ingredients, currentTab} = useSelector((state) => state.ingredients);
+    const {isOpen, ingredient} = useSelector((state) => state.ingredientDetails);
 
-    const buns = data.filter(item => item.type === "bun");
-    const sauces = data.filter(item => item.type === "sauce");
-    const main = data.filter(item => item.type === "main");
+    const bunsRef = useRef(null);
+    const saucesRef = useRef(null);
+    const mainsRef = useRef(null);
+    const tabsRef = useRef(null);
 
-    const openDetailsModal = (item) => {
-        setSelectedItem(item);
-        setIsDetailsModalOpen(true);
+    const selectGroup = (name) => {
+        dispatch(switchTab(name));
+
+        // eslint-disable-next-line default-case
+        switch (name) {
+            case "bun":
+                bunsRef.current.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest",
+                });
+                break;
+            case "sauce":
+                saucesRef.current.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest",
+                });
+                break;
+            case "main":
+                mainsRef.current.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest",
+                });
+                break;
+        }
     };
 
+    const handleScrollBlocks = () => {
+        const tabsBottom = tabsRef.current.getBoundingClientRect().bottom;
+        const bunsTop = bunsRef.current.getBoundingClientRect().top;
+        const saucesTop = saucesRef.current.getBoundingClientRect().top;
+        const mainTop = mainsRef.current.getBoundingClientRect().top;
+
+        const bunsDelta = Math.abs(bunsTop - tabsBottom);
+        const saucesDelta = Math.abs(saucesTop - tabsBottom);
+        const mainDelta = Math.abs(mainTop - tabsBottom);
+
+        const min = Math.min(bunsDelta, saucesDelta, mainDelta);
+
+        const newTab =
+            min === bunsDelta ? "bun" : min === saucesDelta ? "sauce" : "main";
+
+        if (newTab !== currentTab) {
+            dispatch(switchTab(newTab));
+        }
+    };
+
+    const openDetailsModal = useCallback((item) => {
+        dispatch(showDetails(item));
+    }, []);
+
     const closeDetailsModal = () => {
-        setIsDetailsModalOpen(false);
+        dispatch(closeDetails());
     };
 
     return (
-        <section className={ingredients.ingredients}>
+        <section className={stylesIng.ingredients}>
             <h1 className='pt-10 text text_type_main-large'>Соберите бургер</h1>
-            <nav className={ingredients.nav}>
-                <Tab value="buns" active={current === 'buns'} onClick={setCurrent}>
+            <nav className={stylesIng.nav} ref={tabsRef}>
+                <Tab
+                    value="bun"
+                    active={currentTab === "bun"}
+                    onClick={selectGroup}
+                >
                     Булки
                 </Tab>
-                <Tab value="sauces" active={current === 'sauces'} onClick={setCurrent}>
+                <Tab
+                    value="sauce"
+                    active={currentTab === "sauce"}
+                    onClick={selectGroup}
+                >
                     Соусы
                 </Tab>
-                <Tab value="fillings" active={current === 'fillings'} onClick={setCurrent}>
+                <Tab
+                    value="main"
+                    active={currentTab === "main"}
+                    onClick={selectGroup}
+                >
                     Начинки
                 </Tab>
             </nav>
-            <ul className={ingredients.common_list}>
-                <li>
+            <ul
+                className={stylesIng.common_list}
+                onScroll={handleScrollBlocks}
+            >
+                <li ref={bunsRef}>
                     <IngredientsGroup
                         name="Булки"
-                        data={buns}
-                        openDetailsModal={openDetailsModal}
+                        ingredients={ingredients.filter((item) => item.type === "bun")}
+                        showDetails={openDetailsModal}
                     />
                 </li>
-                <li>
+                <li ref={saucesRef}>
                     <IngredientsGroup
                         name="Соусы"
-                        data={sauces}
-                        openDetailsModal={openDetailsModal}
+                        ingredients={ingredients.filter((item) => item.type === "sauce")}
+                        showDetails={openDetailsModal}
                     />
                 </li>
-                <li>
+                <li ref={mainsRef}>
                     <IngredientsGroup
                         name="Начинки"
-                        data={main}
-                        openDetailsModal={openDetailsModal}
+                        ingredients={ingredients.filter((item) => item.type === "main")}
+                        showDetails={openDetailsModal}
                     />
                 </li>
             </ul>
-            {isDetailsModalOpen && (
+            {isOpen && (
                 <Modal
                     onClose={closeDetailsModal}
                     title="Детали ингредиента">
-                    <IngredientDetails ingredient={selectedItem}/>
+                    <IngredientDetails ingredient={ingredient}/>
                 </Modal>
             )}
         </section>
     )
 }
-
-BurgerIngredients.propTypes = {
-    data: PropTypes.arrayOf(dataPropTypes.isRequired).isRequired
-};
 
 export default BurgerIngredients;

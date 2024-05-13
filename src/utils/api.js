@@ -6,17 +6,20 @@ class Api {
         // this._headers = apiConfig.headers;
     }
 
-    async getData() {
-        const res = await fetch(`${this._baseUrl}`, {});
-        return this._handleResponse(res);
+    getData() {
+        return fetch(`${this._baseUrl}/ingredients`, {
+            // headers: this._headers
+        });
     }
 
-    _handleResponse = (res) => {
-        if (res.ok) {
-            return res.json();
-        }
-
-        return Promise.reject(`Ошибка: ${res.status}`);
+    createOrder(order) {
+        return fetch(`${this._baseUrl}/orders`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(order)
+        })
     }
 }
 

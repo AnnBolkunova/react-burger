@@ -1,49 +1,97 @@
 .section {
-    display: flex;
-    flex-direction: column;
     width: 600px;
-}
-
-.list {
+    height: 912px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 48px;
     padding: 100px 16px 0;
 }
 
-.fillings {
-    width: 568px;
+.list {
+    width: 584px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.bun {
+    padding-right: 16px;
+}
+
+.fillings {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 16px;
     max-height: calc(100vh - 510px);
     overflow: auto;
-    list-style: none;
-    margin: 0;
-    padding: 0 12px 0 0;
+    overflow-x: hidden;
+    padding-right: 16px;
 }
 
-.fillings_item {
+.item {
+    width: 568px;
+    height: 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.bun {
-    composes: fillings_item;
-    justify-content: flex-end;
+.placeholder_item {
+    width: 488px;
+    padding: 16px 24px;
+    border-radius: var(--common-border-radius-s);
+    background: var(--background-element);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 32px;
+    min-height: 48px;
+    font-size: 16px;
+    line-height: 24px;
+    color: #F2F2F3;
+    flex-grow: 1;
+}
+
+.placeholder_fillings_item {
+    composes: placeholder_item;
+    border: 2px dashed blue;
+}
+
+.placeholder_item_top {
+    composes: placeholder_item;
+    border-radius: var(--top-constructor-item-border-radius);
+}
+
+.placeholder_item_bottom {
+    composes: placeholder_item;
+    border-radius: var(--bottom-constructor-item-border-radius);
 }
 
 .order {
+    width: 568px;
+    height: 64px;
     display: flex;
+    padding-right: 24px;
     justify-content: flex-end;
     align-items: center;
-    padding: 40px 16px 0;
+    gap: 48px;
 }
 
 .price_block {
     display: flex;
-    gap: 8px;
+    justify-content: center;
     align-items: center;
-    padding-right: 40px;
+    font-size: 48px;
+}
+
+.price_block svg {
+    width: 36px;
+    height: 36px;
+    margin-left: 9px;
 }

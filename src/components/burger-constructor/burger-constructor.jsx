@@ -12,6 +12,7 @@ import {
     setBun,
     addIngredient,
     moveIngredient,
+    clearConstructor
 } from "../../services/slices/constructorSlice";
 import {showOrderDetails, closeOrderDetails} from "../../services/slices/orderSlice";
 import {useDrop} from "react-dnd";
@@ -68,6 +69,7 @@ const BurgerConstructor = () => {
     };
 
     const closeOrderModal = () => {
+        dispatch(clearConstructor());
         dispatch(closeOrderDetails());
     };
 
@@ -119,6 +121,7 @@ const BurgerConstructor = () => {
                     htmlType="button"
                     type="primary"
                     size="large"
+                    disabled={bun === null}
                     onClick={confirmOrder}
                 >
                     Оформить заказ

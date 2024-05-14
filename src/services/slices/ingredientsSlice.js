@@ -1,23 +1,15 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import apiConfig from "../../utils/config";
 import api from "../../utils/api";
+import {checkResponse} from "../../utils/check-response";
 
 export const fetchIngredients = createAsyncThunk(
     "ingredients/fetchDataThunk",
-    async (_, {rejectWithValue}) => {
-        try {
-            const res = await api.getData();
+    async () => {
+        const res = await api.getData()
+            .then(checkResponse);
+        const {data} = res;
 
-            if (!res.ok) {
-                return Promise.reject(`Server error: ${res.status}`);
-            }
-
-            const json = await res.json();
-            return json.data;
-
-        } catch (error) {
-            return rejectWithValue(error.message);
-        }
+        return data;
     }
 );
 

@@ -1,22 +1,14 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import api from "../../utils/api";
+import {checkResponse} from "../../utils/check-response";
 
 export const createOrderThunk = createAsyncThunk(
     "order/createOrderThunk",
-    async (order, {rejectWithValue, dispatch}) => {
-        try {
-            const res = await api.createOrder(order);
+    async (order, {dispatch}) => {
+        const res = await api.createOrder(order)
+            .then(checkResponse);
 
-            if (!res.ok) {
-                return Promise.reject('Can not create order. Server error!');
-            }
-
-            const json = await res.json();
-            dispatch(addNewOrder(json));
-
-        } catch (error) {
-            return rejectWithValue(error.message);
-        }
+        dispatch(addNewOrder(res));
     }
 );
 

@@ -25,6 +25,10 @@ const constructorSlice = createSlice({
                 state.ingredients.splice(action.payload.fromIndex, 1)[0]
             );
         },
+        clearConstructor: (state) => {
+            state.bun = null;
+            state.ingredients = [];
+        }
     },
 });
 
@@ -32,7 +36,8 @@ export const {
     setBun,
     addIngredient,
     removeIngredient,
-    moveIngredient
+    moveIngredient,
+    clearConstructor
 } = constructorSlice.actions;
 
 export default constructorSlice.reducer;

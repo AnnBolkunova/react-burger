@@ -3,12 +3,12 @@ import {useDrag} from "react-dnd";
 import itemStyles from '../ingredient-item/ingredient-item.module.css';
 import PropTypes from "prop-types";
 import {dataPropTypes} from "../../../utils/types";
+import {useLocation, useNavigate} from "react-router-dom";
 
-const IngredientItem = ({item, showDetails, count}) => {
+const IngredientItem = ({item, count}) => {
 
-    const handleClick = () => {
-        showDetails(item);
-    };
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const [{opacity}, ref] = useDrag({
         type: item.type,
@@ -24,7 +24,12 @@ const IngredientItem = ({item, showDetails, count}) => {
             ref={ref}
             style={{opacity: opacity}}
         >
-            <div className={itemStyles.block} onClick={handleClick}>
+            <div
+                className={itemStyles.block}
+                onClick={() =>
+                    navigate(`/ingredients/${item._id}`, {state: {background: location}})
+                }
+            >
                 <img src={item.image} alt={item.name}/>
                 <div className={itemStyles.price}>
                     <p className='text text_type_digits-default'>{item.price}</p>
@@ -39,7 +44,6 @@ const IngredientItem = ({item, showDetails, count}) => {
 
 IngredientItem.propTypes = {
     item: dataPropTypes.isRequired,
-    showDetails: PropTypes.func.isRequired,
     count: PropTypes.number.isRequired
 };
 

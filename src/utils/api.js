@@ -1,14 +1,55 @@
-import apiConfig from "./config";
+import {BASE_URL} from "./config";
 
 class Api {
-    constructor(apiConfig) {
-        this._baseUrl = apiConfig.baseUrl;
-        // this._headers = apiConfig.headers;
+    constructor() {
+        this._baseUrl = BASE_URL;
+    }
+
+    register(userData) {
+        return fetch(`${this._baseUrl}/auth/register`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(userData)
+        })
+    }
+
+    login(creds) {
+        return fetch(`${this._baseUrl}/auth/login`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(creds)
+        })
+    }
+
+    requestEmailVerify(email) {
+        return fetch(`${this._baseUrl}/password-reset`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({email})
+        })
+    }
+
+    postNewPassword(userInfo) {
+        return fetch(`${this._baseUrl}/password-reset/reset`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(userInfo)
+        })
     }
 
     getData() {
         return fetch(`${this._baseUrl}/ingredients`, {
-            // headers: this._headers
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
         });
     }
 
@@ -16,12 +57,12 @@ class Api {
         return fetch(`${this._baseUrl}/orders`, {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify(order)
         })
     }
 }
 
-const api = new Api(apiConfig);
+const api = new Api(BASE_URL);
 export default api;

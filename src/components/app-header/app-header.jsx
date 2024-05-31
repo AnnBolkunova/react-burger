@@ -4,39 +4,59 @@ import {
     ListIcon,
     ProfileIcon
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import header from '../app-header/app-header.module.css';
+import {Link, NavLink} from "react-router-dom";
+import styles from '../app-header/app-header.module.css';
 
 const AppHeader = () => {
 
     return (
-        <header className={header.header}>
-            <div className={header.nav}>
-                <nav className={header.nav_block}>
-                    <a href="#" className={header.nav_item}>
-                        <BurgerIcon type="primary"/>
-                        <p className="text text_type_main-default">
-                            Конструктор
-                        </p>
-                    </a>
-                    <a href="#" className={header.nav_item}>
+        <header className={styles.header}>
+            <div className={styles.nav}>
+                <nav className={styles.left_menu}>
+                    <NavLink
+                        to="/"
+                        className={({isActive}) =>
+                            isActive
+                                ? styles.menu_item_active
+                                : styles.menu_item
+                        }
+                    >
+                        <BurgerIcon
+                            type="primary"
+                        />
+                        <p className="pl-2">Конструктор</p>
+                    </NavLink>
+                    <NavLink
+                        to="/orders-list"
+                        className={({isActive}) =>
+                            isActive
+                                ? styles.menu_item_active
+                                : styles.menu_item
+                        }
+                    >
                         <ListIcon type="secondary"/>
-                        <p className="text text_type_main-default text_color_inactive">
-                            Лента заказов
-                        </p>
-                    </a>
+                        <p className="pl-2">Лента заказов</p>
+                    </NavLink>
                 </nav>
-                <Logo/>
-                <nav className={header.nav_item_single}>
-                    <a href="#" className={header.nav_item}>
+                <Link to="/" className={styles.logo}>
+                    <Logo/>
+                </Link>
+                <nav className={styles.right_menu}>
+                    <NavLink
+                        to="/profile"
+                        className={({isActive}) =>
+                            isActive
+                                ? styles.menu_item_active
+                                : styles.menu_item
+                        }
+                    >
                         <ProfileIcon type="secondary"/>
-                        <p className="text text_type_main-default text_color_inactive">
-                            Личный кабинет
-                        </p>
-                    </a>
+                        <p className="pl-2">Личный кабинет</p>
+                    </NavLink>
                 </nav>
             </div>
         </header>
     )
-}
+};
 
 export default AppHeader;

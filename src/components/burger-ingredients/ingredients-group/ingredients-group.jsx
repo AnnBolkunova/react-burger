@@ -5,7 +5,7 @@ import groupStyles from "./ingredients-group.module.css";
 import PropTypes from "prop-types";
 import {dataPropTypes} from "../../../utils/types";
 
-const IngredientsGroup = ({name, showDetails, ingredients}) => {
+const IngredientsGroup = ({name, ingredients}) => {
 
     const {bun, ingredients: ingredientsList} = useSelector((state) => state.burgerConstructor);
 
@@ -42,7 +42,6 @@ const IngredientsGroup = ({name, showDetails, ingredients}) => {
                     <IngredientItem
                         key={item._id}
                         item={item}
-                        showDetails={showDetails}
                         count={statistics.get(item._id) || 0}
                     />
                 ))}
@@ -53,8 +52,7 @@ const IngredientsGroup = ({name, showDetails, ingredients}) => {
 
 IngredientsGroup.propTypes = {
     name: PropTypes.string.isRequired,
-    ingredients: PropTypes.arrayOf(dataPropTypes.isRequired).isRequired,
-    showDetails: PropTypes.func.isRequired
+    ingredients: PropTypes.arrayOf(dataPropTypes.isRequired).isRequired
 };
 
 export default IngredientsGroup;

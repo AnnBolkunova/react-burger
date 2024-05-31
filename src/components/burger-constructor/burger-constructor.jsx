@@ -1,4 +1,4 @@
-import {useMemo, useCallback} from "react";
+import {useCallback, useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     CurrencyIcon,
@@ -18,12 +18,16 @@ import {showOrderDetails, closeOrderDetails} from "../../services/slices/orderSl
 import {useDrop} from "react-dnd";
 import {v4 as uuidv4} from 'uuid';
 import constructorBurger from './burger-constructor.module.css';
+import {useNavigate} from "react-router-dom";
 
 const BurgerConstructor = () => {
 
-    const dispatch = useDispatch();
     const {bun, ingredients: constructorIngredients} = useSelector((state) => state.burgerConstructor);
     const {isOpen} = useSelector((state) => state.orderDetails);
+    const {accessToken} = useSelector((state) => state.auth);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [, dropTarget] = useDrop({
         accept: ["bun", "sauce", "main"],
@@ -50,27 +54,33 @@ const BurgerConstructor = () => {
         [constructorIngredients]
     );
 
-
-    const totalPrice = useMemo(() => {
-        let totalPrice = constructorIngredients.reduce(
+    useEffect(() => {
+        let price = constructorIngredients.reduce(
             (acc, item) => item.price + acc,
             0
         );
 
         if (bun !== null) {
-            totalPrice += bun.price * 2;
+            price += bun.price * 2;
         }
 
-        return totalPrice;
+        return setTotalPrice(price);
     }, [bun, constructorIngredients]);
 
+
     const confirmOrder = () => {
+        if (!accessToken) {
+            navigate('/login');
+            return;
+        }
+
         dispatch(showOrderDetails());
     };
 
     const closeOrderModal = () => {
         dispatch(clearConstructor());
         dispatch(closeOrderDetails());
+        setTotalPrice(0);
     };
 
     return (

@@ -39,9 +39,7 @@ const App = () => {
                             <Route path="/login" element={<LoginPage/>}/>
                             <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
                             <Route path="/reset-password" element={<ResetPasswordPage/>}/>
-                            <Route element={<ProtectedRoute/>}>
-                                <Route path='/profile' element={<ProfilePage/>}/>
-                            </Route>
+                            <Route path="/profile" element={<ProtectedRoute children={<ProfilePage/>}/>}/>
                             <Route path="/ingredients/:id" element={<IngredientDetails/>}/>
                             <Route path="*" element={<NotFound404/>}/>
                         </Routes>

@@ -1,4 +1,5 @@
 import {BASE_URL} from "./config";
+import {checkResponse} from "./check-response";
 
 const refreshToken = async () => {
     return await fetch(`${BASE_URL}/auth/token`, {
@@ -13,17 +14,12 @@ const refreshToken = async () => {
 };
 
 export const fetchWithRefresh = async (url, options) => {
-    const res = await fetch(url, options);
-
-    if (res.ok) {
-        return res.json();
-    }
-
-    const data = await res.json();
+    const data = await fetch(url, options)
+        .then(checkResponse);
 
     if (data.message === "jwt expired") {
-        const refreshResponse = await refreshToken();
-        const newData = await refreshResponse.json();
+        const newData = await refreshToken()
+            .then(checkResponse);
 
         if (!newData.success) {
             return newData;

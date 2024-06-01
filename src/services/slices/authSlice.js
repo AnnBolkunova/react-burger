@@ -2,12 +2,13 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../utils/api";
 import {BASE_URL} from "../../utils/config";
 import {fetchWithRefresh} from "../../utils/auth-helper";
+import {checkResponse} from "../../utils/check-response";
 
 export const registerThunk = createAsyncThunk(
     "auth/register",
     async (userData) => {
-        const res = await api.register(userData)
-        const data = await res.json();
+        const data = await api.register(userData)
+            .then(checkResponse);
 
         if (data.success) {
             localStorage.setItem("accessToken", data.accessToken);
@@ -25,8 +26,8 @@ export const registerThunk = createAsyncThunk(
 export const loginThunk = createAsyncThunk(
     "auth/login",
     async (creds) => {
-        const res = await api.login(creds)
-        const data = await res.json();
+        const data = await api.login(creds)
+            .then(checkResponse);
 
         if (data.success) {
             localStorage.setItem("accessToken", data.accessToken);
@@ -104,9 +105,8 @@ export const updateUserThunk = createAsyncThunk(
 export const emailVerifyThunk = createAsyncThunk(
     "auth/emailVerify",
     async (email, {rejectWithValue}) => {
-        const res = await api.requestEmailVerify(email);
-
-        const data = await res.json();
+        const data = await api.requestEmailVerify(email)
+            .then(checkResponse);
 
         if (data.success) {
             return {};
@@ -119,9 +119,8 @@ export const emailVerifyThunk = createAsyncThunk(
 export const setNewPasswordThunk = createAsyncThunk(
     "auth/setNewPassword",
     async (userInfo, {rejectWithValue}) => {
-        const res = await api.postNewPassword(userInfo);
-
-        const data = await res.json();
+        const data = await api.postNewPassword(userInfo)
+            .then(checkResponse);
 
         if (data.success) {
             return {};

@@ -1,15 +1,21 @@
 import {useSelector} from "react-redux";
-import {Navigate, Outlet} from "react-router-dom";
+import {Navigate, useLocation} from "react-router-dom";
 
-const ProtectedRoute = () => {
+const ProtectedRoute = ({children, anonymous = false}) => {
 
-    const {accessToken} = useSelector((state) => state.auth);
+    const isLoggedIn = useSelector((store) => store.auth.isLoggedIn);
+    const location = useLocation();
+    const from = location.state?.from || '/';
 
-    if (accessToken) {
-        return <Outlet/>
-    } else {
-        return <Navigate to="/login"/>;
+    if (anonymous && isLoggedIn) {
+        return <Navigate to={from}/>;
     }
+
+    if (!anonymous && !isLoggedIn) {
+        return <Navigate to="/login" state={{from: location}}/>;
+    }
+
+    return children;
 }
 
 export default ProtectedRoute;

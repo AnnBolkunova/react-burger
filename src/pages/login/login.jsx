@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
-import {Link, Navigate} from "react-router-dom";
+import {Link, Navigate, useLocation} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {clearPasswordReset, loginThunk} from "../../services/slices/authSlice";
 import {
@@ -11,10 +11,12 @@ import styles from "./login.module.css";
 
 const LoginPage = () => {
 
-    const {accessToken, isLoggedIn, isPasswordWasReset, status} = useSelector(
+    const {accessToken, isLoggedIn, isPasswordWasReset} = useSelector(
         (state) => state.auth
     );
     const dispatch = useDispatch();
+    const location = useLocation();
+    const from = location.state?.from || '/';
 
     const [formValue, setFormValue] = useState({email: "", password: ""});
 
@@ -41,7 +43,7 @@ const LoginPage = () => {
     );
 
     if (isLoggedIn || accessToken) {
-        return <Navigate to="/"/>;
+        return <Navigate to={from}/>;
     }
 
     return (

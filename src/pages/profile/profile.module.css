@@ -1,0 +1,40 @@
+.profile {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    column-gap: 60px;
+}
+
+.left {
+    width: 320px;
+    padding-top: 120px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 80px
+}
+
+.menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.menu_item {
+    width: 320px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-inactive-color);
+}
+
+.menu_item_active {
+    composes: menu_item;
+    color: var(--text-primary-color);
+}
+
+.right {
+    width: 870px;
+    height: 100%;
+}

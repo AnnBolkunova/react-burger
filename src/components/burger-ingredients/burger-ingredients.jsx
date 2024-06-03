@@ -1,21 +1,14 @@
-import {useCallback, useRef} from "react";
+import {useRef} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientsGroup from "./ingredients-group/ingredients-group";
-import Modal from "../modal/modal";
-import IngredientDetails from "./ingredient-details/ingredient-details";
 import {switchTab} from "../../services/slices/ingredientsSlice";
-import {
-    showDetails,
-    closeDetails,
-} from "../../services/slices/ingredientDetailsSlice";
 import stylesIng from './burger-ingredients.module.css';
 
 const BurgerIngredients = () => {
 
-    const dispatch = useDispatch();
     const {ingredients, currentTab} = useSelector((state) => state.ingredients);
-    const {isOpen, ingredient} = useSelector((state) => state.ingredientDetails);
+    const dispatch = useDispatch();
 
     const bunsRef = useRef(null);
     const saucesRef = useRef(null);
@@ -71,14 +64,6 @@ const BurgerIngredients = () => {
         }
     };
 
-    const openDetailsModal = useCallback((item) => {
-        dispatch(showDetails(item));
-    }, []);
-
-    const closeDetailsModal = () => {
-        dispatch(closeDetails());
-    };
-
     return (
         <section className={stylesIng.ingredients}>
             <h1 className='pt-10 text text_type_main-large'>Соберите бургер</h1>
@@ -113,31 +98,21 @@ const BurgerIngredients = () => {
                     <IngredientsGroup
                         name="Булки"
                         ingredients={ingredients.filter((item) => item.type === "bun")}
-                        showDetails={openDetailsModal}
                     />
                 </li>
                 <li ref={saucesRef}>
                     <IngredientsGroup
                         name="Соусы"
                         ingredients={ingredients.filter((item) => item.type === "sauce")}
-                        showDetails={openDetailsModal}
                     />
                 </li>
                 <li ref={mainsRef}>
                     <IngredientsGroup
                         name="Начинки"
                         ingredients={ingredients.filter((item) => item.type === "main")}
-                        showDetails={openDetailsModal}
                     />
                 </li>
             </ul>
-            {isOpen && (
-                <Modal
-                    onClose={closeDetailsModal}
-                    title="Детали ингредиента">
-                    <IngredientDetails ingredient={ingredient}/>
-                </Modal>
-            )}
         </section>
     )
 }

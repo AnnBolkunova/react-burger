@@ -1,5 +1,5 @@
-import {useEffect} from "react";
-import {useDispatch, useSelector} from 'react-redux';
+import {FC, useEffect} from "react";
+import {useAppDispatch, useAppSelector} from "../../services/store";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import AppHeader from "../app-header/app-header";
 import {fetchIngredients} from "../../services/slices/ingredientsSlice";
@@ -14,14 +14,14 @@ import NotFound404 from "../../pages/not-found/not-found";
 import ProtectedRoute from "../protected-route/protected-route";
 import app from './app.module.css';
 
-const App = () => {
+const App: FC = () => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {
         ingredients,
-        status,
-        error
-    } = useSelector(state => state.ingredients);
+        isLoading,
+        hasError
+    } = useAppSelector(state => state.ingredients);
 
     useEffect(() => {
         dispatch(fetchIngredients());
@@ -32,22 +32,22 @@ const App = () => {
             <div className={app.app}>
                 <AppHeader/>
                 <main className={app.main}>
-                    {!error && status !== 'loading' && ingredients.length && (
+                    {!hasError && !isLoading && ingredients.length && (
                         <Routes>
                             <Route path="/" element={<HomePage/>}/>
                             <Route path="/register" element={<RegisterPage/>}/>
                             <Route path="/login" element={<LoginPage/>}/>
                             <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
                             <Route path="/reset-password" element={<ResetPasswordPage/>}/>
-                            <Route path="/profile" element={<ProtectedRoute children={<ProfilePage/>}/>}/>
+                            <Route path="/profile" element={<ProtectedRoute children={<ProfilePage/>} anonymous/>}/>
                             <Route path="/ingredients/:id" element={<IngredientDetails/>}/>
                             <Route path="*" element={<NotFound404/>}/>
                         </Routes>
                     )}
-                    {status === 'loading' &&
+                    {isLoading &&
                         <h2 className="text text_type_main-medium">Loading...</h2>
                     }
-                    {error && (
+                    {hasError && (
                         <h2 className="text text_type_main-medium">
                             Данные не загружены. Ошибка на сервере!
                         </h2>

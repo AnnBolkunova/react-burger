@@ -1,14 +1,28 @@
-import {useRef} from "react";
+import {FC, useRef} from "react";
 import {
     ConstructorElement,
     DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import {useDrag, useDrop} from "react-dnd";
 import stylesItem from '../burger-constructor.module.css';
-import PropTypes from "prop-types";
-import {dataPropTypes} from "../../../utils/types";
+import {TIngredient} from "../../../utils/types";
 
-const ConstructorItem = ({item, type, index, onRemove, moveItem}) => {
+interface IConstructorItem {
+    item: TIngredient;
+    type?: "top" | "bottom";
+    index?: number;
+    onRemove?: (item: TIngredient) => void;
+    moveItem?: (fromIndex: number, toIndex: number) => void;
+}
+
+const ConstructorItem: FC<IConstructorItem> = ({
+                                                   item,
+                                                   type,
+                                                   index,
+                                                   onRemove,
+                                                   moveItem
+                                               }) => {
+
     const isLocked = type !== undefined || !item;
     let suffix = "";
 
@@ -32,7 +46,7 @@ const ConstructorItem = ({item, type, index, onRemove, moveItem}) => {
         }
     };
 
-    const ref = useRef(null);
+    const ref = useRef<HTMLDivElement>(null);
 
     const [{opacity}, drag] = useDrag({
         type: item.type,
@@ -47,10 +61,10 @@ const ConstructorItem = ({item, type, index, onRemove, moveItem}) => {
         collect: (monitor) => ({
             handlerId: monitor.getHandlerId(),
         }),
-        canDrop: () => {
+        canDrop: (_item: TIngredient) => {
             return type === undefined;
         },
-        hover: (item, monitor) => {
+        hover: (item: TIngredient, monitor) => {
             if (!ref.current) {
                 return;
             }
@@ -64,7 +78,7 @@ const ConstructorItem = ({item, type, index, onRemove, moveItem}) => {
             }
 
             const dragIndex = item.index;
-            const hoverIndex = index;
+            const hoverIndex = index!;
 
             if (dragIndex === hoverIndex) {
                 return;
@@ -74,7 +88,7 @@ const ConstructorItem = ({item, type, index, onRemove, moveItem}) => {
             const hoverMiddleY =
                 (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
             const clientOffset = monitor.getClientOffset();
-            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+            const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
 
             if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
                 return;
@@ -90,14 +104,14 @@ const ConstructorItem = ({item, type, index, onRemove, moveItem}) => {
         },
     });
 
-    if (type !== "bun") {
+    if (type === undefined) {
         drag(drop(ref));
     }
 
     return (
         <div
             className={stylesItem.item}
-            {...(type !== "bun" && {
+            {...(type === undefined && {
                 ref: ref,
                 style: {opacity: opacity},
                 "data-handler-id": handlerId,
@@ -110,23 +124,12 @@ const ConstructorItem = ({item, type, index, onRemove, moveItem}) => {
                 type={type}
                 isLocked={isLocked}
                 text={text}
-                thumbnail={""}
-                {...(item && {
-                    price: item.price,
-                    thumbnail: item.image,
-                    handleClose: onClose,
-                })}
+                price={item.price}
+                thumbnail={item.image}
+                handleClose={!isLocked ? onClose : undefined}
             />
         </div>
     );
-};
-
-ConstructorItem.propTypes = {
-    item: dataPropTypes.isRequired,
-    type: PropTypes.string,
-    onRemove: PropTypes.func,
-    index: PropTypes.number,
-    moveItem: PropTypes.func,
 };
 
 export default ConstructorItem;

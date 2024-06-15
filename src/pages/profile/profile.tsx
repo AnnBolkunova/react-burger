@@ -1,13 +1,14 @@
+import {FC} from "react";
 import {NavLink, Navigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../services/store";
 import Profile from "../../components/profile/profile";
 import {logoutThunk} from "../../services/slices/authSlice";
 import styles from "./profile.module.css";
 
-const ProfilePage = () => {
+const ProfilePage: FC = () => {
 
-    const {isLoggedOut} = useSelector((state) => state.auth);
-    const dispatch = useDispatch();
+    const {isLoggedOut} = useAppSelector((state) => state.auth);
+    const dispatch = useAppDispatch();
 
     const handleLogout = () => {
         dispatch(logoutThunk());

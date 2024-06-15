@@ -1,3 +1,4 @@
+import {FC} from "react";
 import {
     Logo,
     BurgerIcon,
@@ -7,7 +8,7 @@ import {
 import {Link, NavLink} from "react-router-dom";
 import styles from '../app-header/app-header.module.css';
 
-const AppHeader = () => {
+const AppHeader: FC = () => {
 
     return (
         <header className={styles.header}>

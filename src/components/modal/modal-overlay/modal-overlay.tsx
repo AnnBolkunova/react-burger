@@ -1,9 +1,14 @@
+import React, {ReactNode} from "react";
 import overlayStyles from './modal-overlay.module.css';
-import PropTypes from "prop-types";
 
-const ModalOverlay = ({onClose, children}) => {
+interface IModalOverlayProps {
+    onClose: () => void;
+    children: ReactNode;
+}
 
-    const handleOverlayClick = (e) => {
+const ModalOverlay: React.FC<IModalOverlayProps> = ({onClose, children}) => {
+
+    const handleOverlayClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             onClose();
         }
@@ -18,13 +23,5 @@ const ModalOverlay = ({onClose, children}) => {
         </div>
     )
 }
-
-ModalOverlay.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node,
-    ]).isRequired
-};
 
 export default ModalOverlay;

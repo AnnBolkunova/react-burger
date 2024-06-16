@@ -1,4 +1,4 @@
-import {ChangeEvent, FC, FormEvent, useCallback, useEffect, useState} from "react";
+import {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
 import {Link, Navigate, useLocation} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../services/store";
 import {clearPasswordReset, loginThunk} from "../../services/slices/authSlice";
@@ -34,14 +34,11 @@ const LoginPage: FC = () => {
         }
     }, [isPasswordWasReset]);
 
-    const submitForm = useCallback(
-        (e: FormEvent) => {
-            e.preventDefault();
+    const submitForm = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-            dispatch(loginThunk(formValue));
-        },
-        [formValue]
-    );
+        dispatch(loginThunk(formValue));
+    };
 
     if (isLoggedIn || accessToken) {
         return <Navigate to={from}/>;

@@ -21,7 +21,7 @@ const OrderDetails: FC = () => {
 
 
     useEffect(() => {
-        let ingredients = constructorIngredients.map((el: any) => el._id);
+        let ingredients = constructorIngredients.map((el) => el._id);
         let order = {ingredients: [bun!._id, ...ingredients, bun!._id]};
 
         dispatch(createOrderThunk(order));

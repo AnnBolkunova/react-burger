@@ -1,6 +1,6 @@
-import {useState, useCallback} from "react";
+import {useState, useCallback, ChangeEvent, FormEvent, FC} from "react";
 import {Link, Navigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../services/store";
 import {setNewPasswordThunk} from "../../services/slices/authSlice";
 import {
     Button,
@@ -8,17 +8,18 @@ import {
     PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./reset-password.module.css";
+import {TResetPasswordArgs} from "../../utils/types";
 
-const ResetPasswordPage = () => {
+const ResetPasswordPage: FC = () => {
 
-    const {accessToken, isResetPassword, isPasswordWasReset} = useSelector(
+    const {accessToken, isResetPassword, isPasswordWasReset} = useAppSelector(
         (state) => state.auth
     );
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const [formValue, setFormValue] = useState({token: "", password: ""});
+    const [formValue, setFormValue] = useState<TResetPasswordArgs>({token: "", password: ""});
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormValue({
             ...formValue,
             [e.target.name]: e.target.value
@@ -26,7 +27,7 @@ const ResetPasswordPage = () => {
     };
 
     const handleResetPassword = useCallback(
-        (e) => {
+        (e: FormEvent) => {
             e.preventDefault();
 
             dispatch(setNewPasswordThunk(formValue));
@@ -56,6 +57,8 @@ const ResetPasswordPage = () => {
                 value={formValue.token}
                 placeholder="Введите код из письма"
                 name="token"
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
             />
             <Button htmlType="submit">Сохранить</Button>
             <div className={`${styles.line} mt-9`}>

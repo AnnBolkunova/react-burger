@@ -1,11 +1,14 @@
 import {BASE_URL} from "./config";
+import {TCredentials, TOrder, TResetPasswordArgs, TUser} from "./types";
 
 class Api {
-    constructor() {
+    private _baseUrl: string;
+
+    constructor(BASE_URL: string) {
         this._baseUrl = BASE_URL;
     }
 
-    register(userData) {
+    register(userData: TUser) {
         return fetch(`${this._baseUrl}/auth/register`, {
             method: 'POST',
             headers: {
@@ -15,7 +18,7 @@ class Api {
         })
     }
 
-    login(creds) {
+    login(creds: TCredentials) {
         return fetch(`${this._baseUrl}/auth/login`, {
             method: 'POST',
             headers: {
@@ -25,7 +28,7 @@ class Api {
         })
     }
 
-    requestEmailVerify(email) {
+    requestEmailVerify(email: string) {
         return fetch(`${this._baseUrl}/password-reset`, {
             method: "POST",
             headers: {
@@ -35,7 +38,7 @@ class Api {
         })
     }
 
-    postNewPassword(userInfo) {
+    postNewPassword(userInfo: TResetPasswordArgs) {
         return fetch(`${this._baseUrl}/password-reset/reset`, {
             method: "POST",
             headers: {
@@ -53,7 +56,7 @@ class Api {
         });
     }
 
-    createOrder(order) {
+    createOrder(order: TOrder) {
         return fetch(`${this._baseUrl}/orders`, {
             method: 'POST',
             headers: {

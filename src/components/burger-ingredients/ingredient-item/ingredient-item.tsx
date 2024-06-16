@@ -1,11 +1,16 @@
+import {FC} from "react";
 import {CurrencyIcon, Counter} from '@ya.praktikum/react-developer-burger-ui-components';
 import {useDrag} from "react-dnd";
 import itemStyles from '../ingredient-item/ingredient-item.module.css';
-import PropTypes from "prop-types";
-import {dataPropTypes} from "../../../utils/types";
 import {useLocation, useNavigate} from "react-router-dom";
+import {TIngredient} from "../../../utils/types";
 
-const IngredientItem = ({item, count}) => {
+interface IngredientItemProps {
+    item: TIngredient;
+    count: number;
+}
+
+const IngredientItem: FC<IngredientItemProps> = ({item, count}) => {
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -40,11 +45,6 @@ const IngredientItem = ({item, count}) => {
             {count > 0 && <Counter size="default" count={count}/>}
         </div>
     );
-};
-
-IngredientItem.propTypes = {
-    item: dataPropTypes.isRequired,
-    count: PropTypes.number.isRequired
 };
 
 export default IngredientItem;

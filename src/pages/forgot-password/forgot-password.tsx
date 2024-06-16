@@ -1,6 +1,6 @@
-import {useState, useCallback} from "react";
+import {useState, useCallback, ChangeEvent, FormEvent, FC} from "react";
 import {Link, Navigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../services/store";
 import {emailVerifyThunk} from "../../services/slices/authSlice";
 import {
     Button,
@@ -8,15 +8,19 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./forgot-password.module.css";
 
+interface IForgotPasswordState {
+    email: string;
+}
 
-const ForgotPasswordPage = () => {
 
-    const {accessToken, isResetPassword} = useSelector((state) => state.auth);
-    const dispatch = useDispatch();
+const ForgotPasswordPage: FC = () => {
 
-    const [formValue, setFormValue] = useState({email: ""});
+    const {accessToken, isResetPassword} = useAppSelector((state) => state.auth);
+    const dispatch = useAppDispatch();
 
-    const handleChange = (e) => {
+    const [formValue, setFormValue] = useState<IForgotPasswordState>({email: ""});
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormValue({
             ...formValue,
             [e.target.name]: e.target.value
@@ -24,7 +28,7 @@ const ForgotPasswordPage = () => {
     };
 
     const handleResetPassword = useCallback(
-        (e) => {
+        (e: FormEvent) => {
             e.preventDefault();
 
             dispatch(emailVerifyThunk(formValue.email));

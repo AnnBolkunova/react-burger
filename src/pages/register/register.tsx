@@ -1,6 +1,6 @@
-import {useState, useCallback} from "react";
+import {useState, useCallback, ChangeEvent, FormEvent, FC} from "react";
 import {Link, Navigate} from "react-router-dom";
-import {useSelector, useDispatch} from 'react-redux';
+import {useAppDispatch, useAppSelector} from "../../services/store";
 import {registerThunk} from "../../services/slices/authSlice";
 import {
     Button,
@@ -9,22 +9,23 @@ import {
     PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./register.module.css";
+import {TUser} from "../../utils/types";
 
-const RegisterPage = () => {
+const RegisterPage: FC = () => {
 
-    const {accessToken} = useSelector(state => state.auth);
-    const dispatch = useDispatch();
+    const {accessToken} = useAppSelector(state => state.auth);
+    const dispatch = useAppDispatch();
 
-    const [formValue, setFormValue] = useState({email: "", password: "", name: ""});
+    const [formValue, setFormValue] = useState<TUser>({email: "", password: "", name: ""});
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormValue({
             ...formValue,
             [e.target.name]: e.target.value
         });
     };
 
-    const submitForm = useCallback((e) => {
+    const submitForm = useCallback((e: FormEvent) => {
             e.preventDefault();
 
             dispatch(registerThunk(formValue));
@@ -45,6 +46,8 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 value={formValue.name}
                 placeholder={"Имя"}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
             />
             <EmailInput
                 name="email"
@@ -54,7 +57,7 @@ const RegisterPage = () => {
             <PasswordInput
                 name="password"
                 onChange={handleChange}
-                value={formValue.password}
+                value={formValue.password || ""}
             />
             <Button htmlType="submit">Зарегистрироваться</Button>
             <div className={`${styles.line} mt-9`}>

@@ -1,5 +1,5 @@
-import {useCallback, useState, useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useCallback, useState, useEffect, FC} from "react";
+import {useAppDispatch, useAppSelector} from "../../services/store";
 import {
     CurrencyIcon,
     Button
@@ -19,19 +19,20 @@ import {useDrop} from "react-dnd";
 import {v4 as uuidv4} from 'uuid';
 import constructorBurger from './burger-constructor.module.css';
 import {useNavigate} from "react-router-dom";
+import {TIngredient} from "../../utils/types";
 
-const BurgerConstructor = () => {
+const BurgerConstructor: FC = () => {
 
-    const {bun, ingredients: constructorIngredients} = useSelector((state) => state.burgerConstructor);
-    const {isOpen} = useSelector((state) => state.orderDetails);
-    const {accessToken} = useSelector((state) => state.auth);
+    const {bun, ingredients: constructorIngredients} = useAppSelector((state) => state.burgerConstructor);
+    const {isOpen} = useAppSelector((state) => state.orderDetails);
+    const {accessToken} = useAppSelector((state) => state.auth);
     const [totalPrice, setTotalPrice] = useState(0);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const [, dropTarget] = useDrop({
         accept: ["bun", "sauce", "main"],
-        canDrop: (item, monitor) => {
+        canDrop: (item: TIngredient) => {
             return item.index === undefined;
         },
         drop: (item) => {
@@ -43,12 +44,12 @@ const BurgerConstructor = () => {
         },
     });
 
-    const deleteItem = (item) => {
+    const deleteItem = (item: TIngredient) => {
         dispatch(removeIngredient(item));
     };
 
     const moveItem = useCallback(
-        (dragIndex, hoverIndex) => {
+        (dragIndex: number, hoverIndex: number) => {
             dispatch(moveIngredient({fromIndex: dragIndex, toIndex: hoverIndex}));
         },
         [constructorIngredients]

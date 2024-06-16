@@ -1,12 +1,19 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import api from "../../utils/api";
 import {BASE_URL} from "../../utils/config";
 import {fetchWithRefresh} from "../../utils/auth-helper";
 import {checkResponse} from "../../utils/check-response";
+import {
+    TCredentials,
+    TAuthResult,
+    TUser,
+    TResetPasswordArgs,
+} from "../../utils/types";
+import {ThunkAPI} from "../store";
 
-export const registerThunk = createAsyncThunk(
+export const registerThunk = createAsyncThunk<TAuthResult, TUser, ThunkAPI>(
     "auth/register",
-    async (userData) => {
+    async (userData, thunkAPI) => {
         const data = await api.register(userData)
             .then(checkResponse);
 
@@ -19,13 +26,15 @@ export const registerThunk = createAsyncThunk(
                 accessToken: data.accessToken,
                 refreshToken: data.refreshToken
             };
+        } else {
+            return thunkAPI.rejectWithValue("");
         }
     }
 );
 
-export const loginThunk = createAsyncThunk(
+export const loginThunk = createAsyncThunk<TAuthResult, TCredentials, ThunkAPI>(
     "auth/login",
-    async (creds) => {
+    async (creds, thunkAPI) => {
         const data = await api.login(creds)
             .then(checkResponse);
 
@@ -38,113 +47,135 @@ export const loginThunk = createAsyncThunk(
                 accessToken: data.accessToken,
                 refreshToken: data.refreshToken
             };
+        } else {
+            return thunkAPI.rejectWithValue("");
         }
     }
 );
 
-export const logoutThunk = createAsyncThunk(
+export const logoutThunk = createAsyncThunk<void, void, ThunkAPI>(
     "auth/logout",
-    async (_, {rejectWithValue}) => {
+    async (_, thunkAPI) => {
         const data = await fetchWithRefresh(`${BASE_URL}/auth/logout`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
                 Authorization: localStorage.getItem("accessToken"),
-            },
+            } as HeadersInit,
             body: JSON.stringify({
                 token: localStorage.getItem("refreshToken"),
             }),
         });
 
         if (data.success) {
-            return {};
+            return;
         } else {
-            return rejectWithValue("");
+            return thunkAPI.rejectWithValue("");
         }
     }
 );
 
-export const getUserThunk = createAsyncThunk(
+export const getUserThunk = createAsyncThunk<TUser, void, ThunkAPI>(
     "auth/getUser",
-    async (_, {rejectWithValue}) => {
+    async (_, thunkAPI) => {
         const data = await fetchWithRefresh(`${BASE_URL}/auth/user`, {
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
                 Authorization: localStorage.getItem("accessToken"),
-            },
+            } as HeadersInit,
         });
 
         if (data.success) {
-            return {user: data.user};
+            return data.user;
         } else {
-            return rejectWithValue("");
+            return thunkAPI.rejectWithValue("");
         }
     }
 );
 
-export const updateUserThunk = createAsyncThunk(
+export const updateUserThunk = createAsyncThunk<TUser, TUser, ThunkAPI>(
     "auth/updateUser",
-    async (userInfo, {rejectWithValue}) => {
+    async (userInfo, thunkAPI) => {
         const data = await fetchWithRefresh(`${BASE_URL}/auth/user`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
                 Authorization: localStorage.getItem("accessToken"),
-            },
+            } as HeadersInit,
             body: JSON.stringify(userInfo),
         });
 
         if (data.success) {
-            return {user: data.user};
+            return data.user;
         } else {
-            return rejectWithValue("");
+            return thunkAPI.rejectWithValue("");
         }
     }
 );
 
-export const emailVerifyThunk = createAsyncThunk(
+export const emailVerifyThunk = createAsyncThunk<void, string, ThunkAPI>(
     "auth/emailVerify",
-    async (email, {rejectWithValue}) => {
+    async (email, thunkAPI) => {
         const data = await api.requestEmailVerify(email)
             .then(checkResponse);
 
         if (data.success) {
-            return {};
+            return;
         } else {
-            return rejectWithValue("");
+            return thunkAPI.rejectWithValue("");
         }
     }
 );
 
-export const setNewPasswordThunk = createAsyncThunk(
+export const setNewPasswordThunk = createAsyncThunk<
+    void,
+    TResetPasswordArgs,
+    ThunkAPI
+>(
     "auth/setNewPassword",
-    async (userInfo, {rejectWithValue}) => {
+    async (userInfo, thunkAPI) => {
         const data = await api.postNewPassword(userInfo)
             .then(checkResponse);
 
         if (data.success) {
-            return {};
+            return;
         } else {
-            return rejectWithValue("");
+            return thunkAPI.rejectWithValue("");
         }
     }
 );
 
+type TAuthSliceState = {
+    accessToken: string | null;
+    refreshToken: string | null;
+    user: TUser | null;
+    isResetPassword: boolean;
+    isPasswordWasReset: boolean;
+    isLoading: boolean;
+    hasError: boolean;
+    isShown: boolean;
+    isLoggedIn: boolean;
+    isFetchedUser: boolean;
+    isLoggedOut: boolean;
+};
+
+const initialState: TAuthSliceState = {
+    accessToken: localStorage.getItem("accessToken"),
+    refreshToken: localStorage.getItem("refreshToken"),
+    user: null,
+    isResetPassword: false,
+    isPasswordWasReset: false,
+    isLoading: false,
+    hasError: false,
+    isShown: false,
+    isLoggedIn: false,
+    isFetchedUser: false,
+    isLoggedOut: false,
+};
+
 const authSlice = createSlice({
     name: "auth",
-    initialState: {
-        accessToken: localStorage.getItem("accessToken"),
-        refreshToken: localStorage.getItem("refreshToken"),
-        user: null,
-        isResetPassword: false,
-        isPasswordWasReset: false,
-        isLoading: false,
-        hasError: false,
-        isShown: false,
-        isLoggedIn: false,
-        isFetchedUser: false,
-        isLoggedOut: false,
-    },
+    initialState,
     reducers: {
         clearPasswordReset: (state) => {
             state.isPasswordWasReset = false;
@@ -157,7 +188,7 @@ const authSlice = createSlice({
                 state.hasError = false;
                 state.user = null;
             })
-            .addCase(registerThunk.fulfilled, (state, action) => {
+            .addCase(registerThunk.fulfilled, (state, action: PayloadAction<TAuthResult>) => {
                 state.isLoading = false;
                 state.hasError = false;
                 state.user = action.payload.user;
@@ -177,7 +208,7 @@ const authSlice = createSlice({
                 state.isLoggedIn = false;
                 state.user = null;
             })
-            .addCase(loginThunk.fulfilled, (state, action) => {
+            .addCase(loginThunk.fulfilled, (state, action: PayloadAction<TAuthResult>) => {
                 state.isLoading = false;
                 state.hasError = false;
                 state.user = action.payload.user;
@@ -217,10 +248,10 @@ const authSlice = createSlice({
                 state.isLoading = true;
                 state.hasError = false;
             })
-            .addCase(getUserThunk.fulfilled, (state, action) => {
+            .addCase(getUserThunk.fulfilled, (state, action: PayloadAction<TUser>) => {
                 state.isLoading = false;
                 state.hasError = false;
-                state.user = action.payload.user;
+                state.user = action.payload;
             })
             .addCase(getUserThunk.rejected, (state) => {
                 state.isLoading = false;
@@ -230,10 +261,10 @@ const authSlice = createSlice({
                 state.isLoading = true;
                 state.hasError = false;
             })
-            .addCase(updateUserThunk.fulfilled, (state, action) => {
+            .addCase(updateUserThunk.fulfilled, (state, action: PayloadAction<TUser>) => {
                 state.isLoading = false;
                 state.hasError = false;
-                state.user = action.payload.user;
+                state.user = action.payload;
             })
             .addCase(updateUserThunk.rejected, (state) => {
                 state.isLoading = false;

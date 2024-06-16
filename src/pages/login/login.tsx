@@ -1,6 +1,6 @@
-import {useCallback, useEffect, useState} from "react";
+import {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
 import {Link, Navigate, useLocation} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../services/store";
 import {clearPasswordReset, loginThunk} from "../../services/slices/authSlice";
 import {
     Button,
@@ -8,19 +8,20 @@ import {
     PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./login.module.css";
+import {TCredentials} from "../../utils/types";
 
-const LoginPage = () => {
+const LoginPage: FC = () => {
 
-    const {accessToken, isLoggedIn, isPasswordWasReset} = useSelector(
+    const {accessToken, isLoggedIn, isPasswordWasReset} = useAppSelector(
         (state) => state.auth
     );
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const location = useLocation();
     const from = location.state?.from || '/';
 
-    const [formValue, setFormValue] = useState({email: "", password: ""});
+    const [formValue, setFormValue] = useState<TCredentials>({email: "", password: ""});
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormValue({
             ...formValue,
             [e.target.name]: e.target.value
@@ -33,14 +34,11 @@ const LoginPage = () => {
         }
     }, [isPasswordWasReset]);
 
-    const submitForm = useCallback(
-        (e) => {
-            e.preventDefault();
+    const submitForm = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-            dispatch(loginThunk(formValue));
-        },
-        [formValue]
-    );
+        dispatch(loginThunk(formValue));
+    };
 
     if (isLoggedIn || accessToken) {
         return <Navigate to={from}/>;

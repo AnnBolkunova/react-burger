@@ -1,41 +1,41 @@
-import {useRef} from "react";
-import {useSelector, useDispatch} from "react-redux";
+import {FC, useRef} from "react";
+import {useAppDispatch, useAppSelector} from "../../services/store";
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientsGroup from "./ingredients-group/ingredients-group";
 import {switchTab} from "../../services/slices/ingredientsSlice";
 import stylesIng from './burger-ingredients.module.css';
 
-const BurgerIngredients = () => {
+const BurgerIngredients: FC = () => {
 
-    const {ingredients, currentTab} = useSelector((state) => state.ingredients);
-    const dispatch = useDispatch();
+    const {ingredients, currentTab} = useAppSelector((state) => state.ingredients);
+    const dispatch = useAppDispatch();
 
-    const bunsRef = useRef(null);
-    const saucesRef = useRef(null);
-    const mainsRef = useRef(null);
-    const tabsRef = useRef(null);
+    const bunsRef = useRef<HTMLLIElement>(null);
+    const saucesRef = useRef<HTMLLIElement>(null);
+    const mainsRef = useRef<HTMLLIElement>(null);
+    const tabsRef = useRef<HTMLLIElement>(null);
 
-    const selectGroup = (name) => {
+    const selectGroup = (name: string) => {
         dispatch(switchTab(name));
 
         // eslint-disable-next-line default-case
         switch (name) {
             case "bun":
-                bunsRef.current.scrollIntoView({
+                bunsRef.current?.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
                     inline: "nearest",
                 });
                 break;
             case "sauce":
-                saucesRef.current.scrollIntoView({
+                saucesRef.current?.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
                     inline: "nearest",
                 });
                 break;
             case "main":
-                mainsRef.current.scrollIntoView({
+                mainsRef.current?.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
                     inline: "nearest",
@@ -45,10 +45,14 @@ const BurgerIngredients = () => {
     };
 
     const handleScrollBlocks = () => {
-        const tabsBottom = tabsRef.current.getBoundingClientRect().bottom;
-        const bunsTop = bunsRef.current.getBoundingClientRect().top;
-        const saucesTop = saucesRef.current.getBoundingClientRect().top;
-        const mainTop = mainsRef.current.getBoundingClientRect().top;
+        const tabsBottom = tabsRef.current?.getBoundingClientRect().bottom;
+        const bunsTop = bunsRef.current?.getBoundingClientRect().top;
+        const saucesTop = saucesRef.current?.getBoundingClientRect().top;
+        const mainTop = mainsRef.current?.getBoundingClientRect().top;
+
+        if (!tabsBottom || !bunsTop || !saucesTop || !mainTop) {
+            return;
+        }
 
         const bunsDelta = Math.abs(bunsTop - tabsBottom);
         const saucesDelta = Math.abs(saucesTop - tabsBottom);

@@ -1,25 +1,30 @@
-import {useMemo} from "react";
-import {useSelector} from "react-redux";
+import {FC, useMemo} from "react";
+import {useAppSelector} from "../../../services/store";
 import IngredientItem from "../ingredient-item/ingredient-item";
 import groupStyles from "./ingredients-group.module.css";
-import PropTypes from "prop-types";
-import {dataPropTypes} from "../../../utils/types";
+import {TIngredient} from "../../../utils/types";
 
-const IngredientsGroup = ({name, ingredients}) => {
+interface IIngredientsGroupProps {
+    name: string;
+    ingredients: Array<TIngredient>;
+}
 
-    const {bun, ingredients: ingredientsList} = useSelector((state) => state.burgerConstructor);
+const IngredientsGroup: FC<IIngredientsGroupProps> = ({name, ingredients}) => {
+
+    const {bun, ingredients: ingredientsList} = useAppSelector((state) => state.burgerConstructor);
 
     const statistics = useMemo(() => {
+        let res = new Map<string, number>();
+
         if (ingredients.length === 0) {
-            return {};
+            return res;
         }
 
         const groupType = ingredients[0].type;
-        let res = new Map();
 
         if (groupType === "bun") {
             ingredients.map((el) =>
-                res.set(el._id, bun && bun._id === el._id ? 1 : 0)
+                res.set(el._id, bun && bun._id === el._id ? 2 : 0)
             );
             return res;
         }
@@ -29,7 +34,7 @@ const IngredientsGroup = ({name, ingredients}) => {
         );
 
         return items.reduce(
-            (acc, e) => acc.set(e._id, (acc.get(e._id) || 0) + 1),
+            (acc: Map<string, number>, e) => acc.set(e._id, (acc.get(e._id) || 0) + 1),
             res
         );
     }, [ingredients, ingredientsList, bun]);
@@ -48,11 +53,6 @@ const IngredientsGroup = ({name, ingredients}) => {
             </div>
         </div>
     );
-};
-
-IngredientsGroup.propTypes = {
-    name: PropTypes.string.isRequired,
-    ingredients: PropTypes.arrayOf(dataPropTypes.isRequired).isRequired
 };
 
 export default IngredientsGroup;

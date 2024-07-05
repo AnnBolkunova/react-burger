@@ -1,0 +1,21 @@
+.container {
+    max-width: 1240px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.feedOrder {
+    max-width: 1240px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    column-gap: 60px;
+}
+
+.text {
+    width: 100%;
+    text-align: left;
+}

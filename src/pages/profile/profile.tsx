@@ -1,6 +1,7 @@
 import {FC} from "react";
-import {NavLink, Navigate} from "react-router-dom";
+import {NavLink, Navigate, Routes, Route, useLocation, Outlet} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../services/store";
+import ProfileOrders from "./profile-orders/profile-orders";
 import Profile from "../../components/profile/profile";
 import {logoutThunk} from "../../services/slices/authSlice";
 import styles from "./profile.module.css";
@@ -57,10 +58,14 @@ const ProfilePage: FC = () => {
                 </p>
             </div>
             <div className={styles.right}>
-                <Profile/>
+                <Routes>
+                    <Route path="/" element={<Profile/>}/>
+                    <Route path="/orders" element={<ProfileOrders/>}/>
+                </Routes>
             </div>
         </div>
-    );
+    )
+        ;
 };
 
 export default ProfilePage;

@@ -1,5 +1,5 @@
 import {BASE_URL} from "./config";
-import {TCredentials, TOrder, TResetPasswordArgs, TUser} from "./types";
+import {TCredentials, TFetchOrder, TOrder, TResetPasswordArgs, TUser} from "./types";
 
 class Api {
     private _baseUrl: string;
@@ -63,6 +63,26 @@ class Api {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify(order)
+        })
+    }
+
+    fetchOrders(params: TFetchOrder) {
+        const token = localStorage.getItem('accessToken');
+        return fetch(`${BASE_URL}/orders`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+                "Authorization": token!
+            },
+            body: JSON.stringify(params)
+        })
+    }
+
+    fetchOrderInfo(id: number) {
+        return fetch(`${BASE_URL}/orders/${id}`, {
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
         })
     }
 }

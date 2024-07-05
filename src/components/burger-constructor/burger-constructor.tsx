@@ -24,7 +24,7 @@ import {TIngredient} from "../../utils/types";
 const BurgerConstructor: FC = () => {
 
     const {bun, ingredients: constructorIngredients} = useAppSelector((state) => state.burgerConstructor);
-    const {isOpen} = useAppSelector((state) => state.orderDetails);
+    const {isOpen} = useAppSelector((state) => state.order);
     const {accessToken} = useAppSelector((state) => state.auth);
     const [totalPrice, setTotalPrice] = useState(0);
     const dispatch = useAppDispatch();

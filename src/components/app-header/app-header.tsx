@@ -28,7 +28,7 @@ const AppHeader: FC = () => {
                         <p className="pl-2">Конструктор</p>
                     </NavLink>
                     <NavLink
-                        to="/orders-list"
+                        to="/feed"
                         className={({isActive}) =>
                             isActive
                                 ? styles.menu_item_active

@@ -17,7 +17,7 @@ const OrderDetails: FC = () => {
         number,
         isLoading,
         hasError
-    } = useAppSelector((state) => state.orderDetails);
+    } = useAppSelector((state) => state.order);
 
 
     useEffect(() => {

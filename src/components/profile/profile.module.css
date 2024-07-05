@@ -1,14 +1,13 @@
 .profile {
-    width: 100%;
+    width: 480px;
     display: flex;
     flex-direction: column;
     row-gap: 24px;
     padding-top: 120px;
 }
 
-.button {
-    width: 480px;
+.form_buttons {
     display: flex;
     justify-content: center;
-    align-items: center;
+    margin: 0;
 }

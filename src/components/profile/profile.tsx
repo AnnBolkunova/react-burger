@@ -15,6 +15,8 @@ const Profile: FC = () => {
     const {user} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
 
+    const [formChanged, setFormChanged] = useState(false);
+
     const [formValue, setFormValue] = useState<TUser>({
         name: user ? user.name : "",
         email: user ? user.email : "",
@@ -26,7 +28,15 @@ const Profile: FC = () => {
             ...formValue,
             [e.target.name]: e.target.value
         });
+        setFormChanged(true);
     };
+
+    const resetForm = () => {
+        setFormValue(!!user
+            ? {name: user.name, email: user.email, password: ''}
+            : {name: '', email: '', password: ''});
+        setFormChanged(false);
+    }
 
     const handleSave = (e: FormEvent) => {
         e.preventDefault();
@@ -74,9 +84,23 @@ const Profile: FC = () => {
                 value={formValue.password || ""}
                 name="password"
             />
-            <div className={styles.button}>
-                <Button htmlType="submit">Сохранить</Button>
-            </div>
+            {formChanged && (
+                <div className={`${styles.form_buttons} mt-6`}>
+                    <Button
+                        htmlType="button"
+                        type="secondary"
+                        size="medium"
+                        onClick={resetForm}>
+                        Отмена
+                    </Button>
+                    <Button
+                        htmlType="submit"
+                        type="primary"
+                        size="medium">
+                        Сохранить
+                    </Button>
+                </div>
+            )}
         </form>
     );
 };

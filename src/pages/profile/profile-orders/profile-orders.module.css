@@ -1,0 +1,24 @@
+.container {
+    width: 100%;
+    max-height: calc(100vh - 142px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #8585AD #2F2F37;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.container::-webkit-scrollbar {
+    background-color: #2F2F37;
+    width: 8px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: #8585AD;
+}
+
+.link {
+    text-decoration: none;
+    color: inherit;
+}

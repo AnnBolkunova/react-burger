@@ -1,0 +1,13 @@
+.order_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 640px;
+    margin-top: 122px;
+}

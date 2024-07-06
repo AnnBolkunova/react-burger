@@ -1,20 +1,18 @@
 import {FC} from "react";
-import {useNavigate, useLocation, useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {useAppSelector} from "../../../services/store";
-import Modal from "../../modal/modal";
 import styles from './ingredient-details.module.css';
 
 const IngredientDetails: FC = () => {
 
     const {ingredients} = useAppSelector((state) => state.ingredients);
-    const navigate = useNavigate();
     const location = useLocation();
     const {id} = useParams() || "";
     const background = location.state && location.state.background;
 
     const ingredient = ingredients.find((el) => el._id === id);
 
-    const content = (
+    return (
         <div className={styles.container}>
             {!background && (
                 <p className="text_type_main-large mt-30">Детали ингредиента</p>
@@ -43,18 +41,6 @@ const IngredientDetails: FC = () => {
                 </li>
             </ul>
         </div>
-    )
-
-    return (
-        <>
-            {background ? (
-                <Modal onClose={() => navigate(-1)} title="Детали ингредиента">
-                    {content}
-                </Modal>
-            ) : (
-                content
-            )}
-        </>
     )
 };
 

@@ -6,7 +6,7 @@ import {useAppDispatch, useAppSelector} from "../../services/store";
 import {selectFeedOrders} from "../../services/orders/ordersSlice";
 import {ALL_ORDERS_URL, MY_ORDERS_URL} from "../../utils/constants";
 import {FormattedDate} from "@ya.praktikum/react-developer-burger-ui-components";
-import {wsConnect} from "../../services/middleware/actions";
+import {wsConnect, wsDisconnect} from "../../services/middleware/actions";
 import {v4 as uuidv4} from 'uuid';
 import OrdersInfoDetails from "./order-info-details/order-info-details";
 import {TIngredient} from "../../utils/types";
@@ -51,6 +51,9 @@ const OrderInfo: FC = () => {
         if (match.includes(isFeed)) {
             dispatch(wsConnect(ALL_ORDERS_URL));
         }
+        return () => {
+            dispatch(wsDisconnect());
+        };
     }, [match]);
 
     return (

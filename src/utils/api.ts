@@ -56,16 +56,6 @@ class Api {
         });
     }
 
-    createOrder(order: TOrder) {
-        return fetch(`${this._baseUrl}/orders`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(order)
-        })
-    }
-
     fetchOrders(params: TFetchOrder) {
         const token = localStorage.getItem('accessToken');
         return fetch(`${BASE_URL}/orders`, {

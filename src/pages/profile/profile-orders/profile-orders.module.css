@@ -1,11 +1,12 @@
 .container {
-    max-height: calc(100vh - 228px);
+    width: 100%;
+    max-height: calc(100vh - 142px);
     overflow-y: auto;
     overflow-x: hidden;
-    max-width: 600px;
-    width: 100%;
     scrollbar-width: thin;
     scrollbar-color: #8585AD #2F2F37;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .container::-webkit-scrollbar {

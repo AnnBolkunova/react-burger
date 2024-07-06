@@ -1,5 +1,5 @@
 import {FC} from "react";
-import {NavLink, Navigate, Routes, Route, useLocation, Outlet} from "react-router-dom";
+import {NavLink, Navigate, Routes, Route, useLocation} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../services/store";
 import ProfileOrders from "./profile-orders/profile-orders";
 import Profile from "../../components/profile/profile";
@@ -10,6 +10,7 @@ const ProfilePage: FC = () => {
 
     const {isLoggedOut} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
+    const {pathname} = useLocation();
 
     const handleLogout = () => {
         dispatch(logoutThunk());
@@ -25,11 +26,7 @@ const ProfilePage: FC = () => {
                 <ul className={styles.menu}>
                     <NavLink
                         to="/profile"
-                        className={({isActive}) =>
-                            isActive
-                                ? styles.menu_item_active
-                                : styles.menu_item
-                        }
+                        className={() => pathname === '/profile' ? styles.menu_item_active : styles.menu_item}
                     >
                         <span>Профиль</span>
                     </NavLink>
@@ -60,7 +57,11 @@ const ProfilePage: FC = () => {
             <div className={styles.right}>
                 <Routes>
                     <Route path="/" element={<Profile/>}/>
-                    <Route path="/orders" element={<ProfileOrders/>}/>
+                    <Route path="/orders" element={
+                        <div style={{width: "100%", height: "100%", paddingTop: "20px"}}>
+                            <ProfileOrders/>
+                        </div>
+                    }/>
                 </Routes>
             </div>
         </div>

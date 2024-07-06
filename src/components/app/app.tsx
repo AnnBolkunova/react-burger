@@ -17,6 +17,7 @@ import OrderFeedPage from "../../pages/feed/feed";
 import app from './app.module.css';
 import Modal from "../modal/modal";
 import ProfileOrders from "../../pages/profile/profile-orders/profile-orders";
+import OrderPage from "../../pages/order-page/order-page";
 
 const App: FC = () => {
 
@@ -50,8 +51,10 @@ const App: FC = () => {
                     <Route path="/profile/*" element={<ProtectedRoute children={<ProfilePage/>} anonymous/>}/>
                     <Route path="/profile/orders/:id"
                            element={<ProtectedRoute children={<OrderInfo/>} anonymous/>}/>
-                    <Route path="/feed" element={<OrderFeedPage/>}/>
-                    <Route path="/feed/:id" element={<OrderInfo/>}/>
+                    <Route path="/feed">
+                        <Route index path="/feed" element={<OrderFeedPage/>}/>
+                        <Route path=":id" element={<OrderPage/>}/>
+                    </Route>
                     <Route path="/ingredients/:id" element={<IngredientDetails/>}/>
                     <Route path="*" element={<NotFound404/>}/>
                 </Routes>

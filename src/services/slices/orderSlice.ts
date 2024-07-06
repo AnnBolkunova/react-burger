@@ -3,6 +3,9 @@ import api from "../../utils/api";
 import {checkResponse} from "../../utils/check-response";
 import {TCreatedOrder, TFetchOrder, TOrder, TOrderInfo} from "../../utils/types";
 import {ThunkAPI} from "../store";
+import {fetchWithRefresh} from "../../utils/auth-helper";
+import {BASE_URL} from "../../utils/config";
+import {clearConstructor} from "./constructorSlice";
 
 interface IOrderItem {
     number: boolean
@@ -23,10 +26,17 @@ interface IFetchOrderInfoResponse {
 export const createOrderThunk = createAsyncThunk<TCreatedOrder, TOrder, ThunkAPI>(
     "order/createOrderThunk",
     async (order, thunkAPI) => {
-        const res = await api.createOrder(order)
-            .then(checkResponse);
+        const res = await fetchWithRefresh(`${BASE_URL}/orders`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.getItem("accessToken"),
+            } as HeadersInit,
+            body: JSON.stringify(order),
+        })
 
         if (res.success) {
+            thunkAPI.dispatch(clearConstructor());
             return {name: res.name, number: res.order.number} as TCreatedOrder;
         } else {
             return thunkAPI.rejectWithValue("");
@@ -48,11 +58,12 @@ export const getOrders = createAsyncThunk<IFetchOrderResponse, TFetchOrder, Thun
     }
 )
 
-export const fetchOrderInfo = createAsyncThunk<IFetchOrderInfoResponse, number, ThunkAPI>(
+export const fetchOrderById = createAsyncThunk<IFetchOrderInfoResponse, number, ThunkAPI>(
     'fetchOrderInfo',
     async (id, thunkAPI) => {
         const res: IFetchOrderInfoResponse = await api.fetchOrderInfo(id)
             .then(checkResponse);
+        debugger
 
         if (res.success) {
             return {name: res.name, orders: res.orders, success: res.success} as IFetchOrderInfoResponse;
@@ -121,16 +132,16 @@ const orderSlice = createSlice({
                 state.isLoading = false;
                 state.hasError = true;
             })
-            .addCase(fetchOrderInfo.pending, (state) => {
+            .addCase(fetchOrderById.pending, (state) => {
                 state.isLoading = true;
                 state.hasError = false;
             })
-            .addCase(fetchOrderInfo.fulfilled, (state, action) => {
+            .addCase(fetchOrderById.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.orderInfo = action.payload.orders[0];
                 state.hasError = false;
             })
-            .addCase(fetchOrderInfo.rejected, (state) => {
+            .addCase(fetchOrderById.rejected, (state) => {
                 state.isLoading = false;
                 state.hasError = true;
             })

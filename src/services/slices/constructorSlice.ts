@@ -6,7 +6,7 @@ type TConstructorSliceState = {
     ingredients: Array<TIngredient>;
 };
 
-const initialState: TConstructorSliceState = {
+export const initialState: TConstructorSliceState = {
     bun: null,
     ingredients: [],
 };

@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk, PayloadAction} from "@reduxjs/toolkit";
 import api from "../../utils/api";
 import {checkResponse} from "../../utils/check-response";
-import {TCreatedOrder, TFetchOrder, TOrder, TOrderInfo} from "../../utils/types";
+import {TCreatedOrder, TOrder, TOrderInfo} from "../../utils/types";
 import {ThunkAPI} from "../store";
 import {fetchWithRefresh} from "../../utils/auth-helper";
 import {BASE_URL} from "../../utils/config";
@@ -9,12 +9,6 @@ import {clearConstructor} from "./constructorSlice";
 
 interface IOrderItem {
     number: boolean
-}
-
-interface IFetchOrderResponse {
-    name: string,
-    order: IOrderItem,
-    success: boolean
 }
 
 interface IFetchOrderInfoResponse {
@@ -44,26 +38,11 @@ export const createOrderThunk = createAsyncThunk<TCreatedOrder, TOrder, ThunkAPI
     }
 );
 
-export const getOrders = createAsyncThunk<IFetchOrderResponse, TFetchOrder, ThunkAPI>(
-    "order/getOrdersThunk",
-    async (params, thunkAPI) => {
-        const res = await api.fetchOrders(params)
-            .then(checkResponse);
-
-        if (res.success) {
-            return {name: res.name, order: res.order, success: res.success} as IFetchOrderResponse;
-        } else {
-            return thunkAPI.rejectWithValue("");
-        }
-    }
-)
-
 export const fetchOrderById = createAsyncThunk<IFetchOrderInfoResponse, number, ThunkAPI>(
     'fetchOrderInfo',
     async (id, thunkAPI) => {
         const res: IFetchOrderInfoResponse = await api.fetchOrderInfo(id)
             .then(checkResponse);
-        debugger
 
         if (res.success) {
             return {name: res.name, orders: res.orders, success: res.success} as IFetchOrderInfoResponse;
@@ -83,7 +62,7 @@ type TOrderSliceState = {
     hasError: boolean;
 };
 
-const initialState: TOrderSliceState = {
+export const initialState: TOrderSliceState = {
     name: "",
     number: null,
     order: null,
@@ -118,17 +97,6 @@ const orderSlice = createSlice({
                 state.hasError = false;
             })
             .addCase(createOrderThunk.rejected, (state) => {
-                state.isLoading = false;
-                state.hasError = true;
-            })
-            .addCase(getOrders.pending, (state) => {
-                state.isLoading = true;
-                state.hasError = false;
-            })
-            .addCase(getOrders.fulfilled, (state, action) => {
-                state.order = action.payload.order;
-            })
-            .addCase(getOrders.rejected, (state) => {
                 state.isLoading = false;
                 state.hasError = true;
             })

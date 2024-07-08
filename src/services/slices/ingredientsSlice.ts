@@ -16,17 +16,13 @@ export const fetchIngredients = createAsyncThunk<Array<TIngredient>>(
 
 type TIngredientsSliceState = {
     ingredients: Array<TIngredient>;
-    mappedIngredients: {
-        [_id: string]: TIngredient
-    };
     currentTab: string;
     isLoading: boolean;
     hasError: boolean;
 };
 
-const initialState: TIngredientsSliceState = {
+export const initialState: TIngredientsSliceState = {
     ingredients: [],
-    mappedIngredients: {},
     currentTab: "bun",
     isLoading: false,
     hasError: false,
@@ -50,12 +46,6 @@ const ingredientsSlice = createSlice({
                 state.ingredients = action.payload;
                 state.isLoading = false;
                 state.hasError = false;
-                state.mappedIngredients = action.payload.reduce(function (res: Object, ingredient: TIngredient) {
-                    return {
-                        ...res,
-                        [ingredient._id]: ingredient
-                    }
-                }, {});
             })
             .addCase(fetchIngredients.rejected, (state) => {
                 state.isLoading = false;

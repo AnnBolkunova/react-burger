@@ -159,7 +159,7 @@ type TAuthSliceState = {
     isLoggedOut: boolean;
 };
 
-const initialState: TAuthSliceState = {
+export const initialState: TAuthSliceState = {
     accessToken: localStorage.getItem("accessToken"),
     refreshToken: localStorage.getItem("refreshToken"),
     user: null,

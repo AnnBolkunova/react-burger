@@ -17,22 +17,27 @@ export const fetchWithRefresh = async (
     url: string,
     options: RequestInit | undefined
 ) => {
-    const data = await fetch(url, options)
-        .then(checkResponse);
+    const res = await fetch(url, options);
+
+    if (res.ok) {
+        return await res.json();
+    }
+
+    const data = await res.json();
 
     if (data.message === "jwt expired") {
         const newData = await refreshToken()
-            .then(checkResponse);
+        const data = await newData.json();
 
-        if (!newData.success) {
-            return newData;
+        if (!data.success) {
+            return data;
         }
 
-        localStorage.setItem("accessToken", newData.accessToken);
-        localStorage.setItem("refreshToken", newData.refreshToken);
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
         let opts = options || {method: "GET", headers: {}};
 
-        opts.headers = {...opts.headers, Authorization: newData.accessToken};
+        opts.headers = {...opts.headers, Authorization: data.accessToken};
 
         const res = await fetch(url, opts);
 

@@ -31,6 +31,7 @@ const IngredientItem: FC<IngredientItemProps> = ({item, count}) => {
         >
             <div
                 className={itemStyles.block}
+                data-test={`burger-ingredient-${item._id}`}
                 onClick={() =>
                     navigate(`/ingredients/${item._id}`, {state: {background: location}})
                 }

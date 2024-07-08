@@ -42,7 +42,9 @@ const IngredientsGroup: FC<IIngredientsGroupProps> = ({name, ingredients}) => {
     return (
         <div className={groupStyles.menuBlock}>
             <p className="text text_type_main-medium">{name}</p>
-            <div className={groupStyles.list}>
+            <div className={groupStyles.list}
+                 data-test="list-ingredients-all"
+            >
                 {ingredients.map((item) => (
                     <IngredientItem
                         key={item._id}

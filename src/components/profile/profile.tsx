@@ -46,7 +46,7 @@ const Profile: FC = () => {
 
     useEffect(() => {
         dispatch(getUserThunk());
-    }, []);
+    }, [user?.name, user?.email]);
 
     useEffect(() => {
         if (user) {

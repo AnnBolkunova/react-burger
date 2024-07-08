@@ -14,6 +14,7 @@ interface IOrderItem {
 interface IFetchOrderInfoResponse {
     name: string,
     orders: Array<TOrderInfo>,
+    orderInfo: TOrderInfo,
     success: boolean
 }
 
@@ -45,7 +46,12 @@ export const fetchOrderById = createAsyncThunk<IFetchOrderInfoResponse, number, 
             .then(checkResponse);
 
         if (res.success) {
-            return {name: res.name, orders: res.orders, success: res.success} as IFetchOrderInfoResponse;
+            return {
+                name: res.name,
+                orders: res.orders,
+                orderInfo: res.orders[0],
+                success: res.success
+            } as IFetchOrderInfoResponse;
         } else {
             return thunkAPI.rejectWithValue("");
         }
@@ -106,7 +112,7 @@ const orderSlice = createSlice({
             })
             .addCase(fetchOrderById.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.orderInfo = action.payload.orders[0];
+                state.orderInfo = action.payload.orderInfo;
                 state.hasError = false;
             })
             .addCase(fetchOrderById.rejected, (state) => {

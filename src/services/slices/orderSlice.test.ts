@@ -2,11 +2,13 @@ import orderReducer, {
     createOrderThunk,
     initialState,
     showOrderDetails,
-    closeOrderDetails
+    closeOrderDetails, fetchOrderById
 } from "./orderSlice";
 import {TCreatedOrder} from "../../utils/types";
+import orderInfo from "../../components/order-info/order-info";
 
 describe("orderSlice", () => {
+
     it("should return the initial state", () => {
         expect(orderReducer(undefined, {type: ""})).toEqual(initialState);
     });
@@ -14,9 +16,7 @@ describe("orderSlice", () => {
     it("should handle pending create order", () => {
         const state = {
             ...initialState,
-            hasError: true,
-            name: "Burger",
-            number: 5634,
+            hasError: true
         };
 
         const action = {type: createOrderThunk.pending.type};
@@ -53,9 +53,7 @@ describe("orderSlice", () => {
     it("should handle failed create order", () => {
         const state = {
             ...initialState,
-            isLoading: true,
-            name: "Burger",
-            number: 5634,
+            isLoading: true
         };
 
         const action = {type: createOrderThunk.rejected.type};
@@ -64,6 +62,16 @@ describe("orderSlice", () => {
         expect(result).toEqual({
             ...initialState,
             hasError: true,
+        });
+    });
+
+    it("should handle successful get order", () => {
+        const action = {type: fetchOrderById.fulfilled.type, payload: {orderInfo}};
+        const result = orderReducer(initialState, action);
+
+        expect(result).toEqual({
+            ...initialState,
+            orderInfo: orderInfo
         });
     });
 

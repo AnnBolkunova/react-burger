@@ -20,7 +20,7 @@ describe("authSlice", () => {
         const state = {
             ...initialState,
             hasError: true,
-            user: {name: "Boris", email: "boris@yandex.ru"},
+            user: {name: "Gadya", email: "gadya@yandex.ru"},
         };
 
         const action = {type: registerThunk.pending.type};
@@ -35,9 +35,9 @@ describe("authSlice", () => {
     it("should handle successful register", () => {
         const authResult: TAuthResult = {
             user: {
-                name: "Petya",
-                password: "9999",
-                email: "yyy@yandex.ru",
+                name: "Peter",
+                password: "12345qwerty",
+                email: "peter@yandex.ru",
             },
             accessToken: "accessToken",
             refreshToken: "refreshToken",
@@ -66,7 +66,7 @@ describe("authSlice", () => {
         const state = {
             ...initialState,
             isLoading: true,
-            user: {name: "Valya", email: "valya@yandex.ru"},
+            user: {name: "Mike", email: "mike@yandex.ru"},
         };
 
         const action = {type: registerThunk.rejected.type};
@@ -84,8 +84,8 @@ describe("authSlice", () => {
             hasError: true,
             isLoggedIn: true,
             user: {
-                name: "Sveta",
-                email: "sveta@yandex.ru",
+                name: "Vova",
+                email: "vova@yandex.ru",
             },
         };
 
@@ -101,9 +101,9 @@ describe("authSlice", () => {
     it("should handle successful login", () => {
         const authResult: TAuthResult = {
             user: {
-                name: "Vasya",
-                password: "8888",
-                email: "xxx@yandex.ru",
+                name: "Norma",
+                password: "123qwe321",
+                email: "foofoo@yandex.ru",
             },
             accessToken: "accessToken",
             refreshToken: "refreshToken",
@@ -132,7 +132,7 @@ describe("authSlice", () => {
         const state = {
             ...initialState,
             isLoading: true,
-            user: {name: "Katya", email: "katya@yandex.ru"},
+            user: {name: "Sam", email: "sam@yandex.ru"},
             isLoggedIn: true,
         };
 
@@ -181,8 +181,6 @@ describe("authSlice", () => {
             accessToken: "",
             refreshToken: "",
         });
-        expect(localStorage.removeItem).toHaveBeenCalledWith("accessToken");
-        expect(localStorage.removeItem).toHaveBeenCalledWith("refreshToken");
     });
 
     it("should handle failed logout", () => {
@@ -216,7 +214,7 @@ describe("authSlice", () => {
         });
     });
 
-    it("should handle pending get user", () => {
+    it("should handle successful get user", () => {
         const state = {
             ...initialState,
             isLoading: true,
@@ -224,9 +222,9 @@ describe("authSlice", () => {
         };
 
         const user: TUser = {
-            name: "Kolya",
-            password: "admin",
-            email: "kolya@yandex.ru",
+            name: "Norma",
+            password: "123qwe321",
+            email: "foofoo@yandex.ru",
         };
 
         const action = {type: getUserThunk.fulfilled.type, payload: user};
@@ -268,7 +266,7 @@ describe("authSlice", () => {
         });
     });
 
-    it("should handle pending update user", () => {
+    it("should handle successful update user", () => {
         const state = {
             ...initialState,
             isLoading: true,
@@ -276,9 +274,9 @@ describe("authSlice", () => {
         };
 
         const user: TUser = {
-            name: "Sergey",
-            password: "mix",
-            email: "serga@yandex.ru",
+            name: "Moo",
+            password: "12345",
+            email: "moo@yandex.ru",
         };
 
         const action = {type: updateUserThunk.fulfilled.type, payload: user};

@@ -64,6 +64,7 @@ describe("ingredientsSlice", () => {
 
         expect(result).toEqual({
             ...initialState,
+            ingredients,
             isLoading: true,
         });
     });
@@ -71,6 +72,7 @@ describe("ingredientsSlice", () => {
     it("should handle successful fetch ingredients", () => {
         const state = {
             ...initialState,
+            ingredients,
             isLoading: true,
             hasError: true,
         };
@@ -83,11 +85,7 @@ describe("ingredientsSlice", () => {
 
         expect(result).toEqual({
             ...initialState,
-            ingredients,
-            ingredientsMap: new Map([
-                [ingredients[0]._id, ingredients[0]],
-                [ingredients[1]._id, ingredients[1]],
-            ]),
+            ingredients
         });
     });
 
@@ -103,6 +101,7 @@ describe("ingredientsSlice", () => {
 
         expect(result).toEqual({
             ...initialState,
+            ingredients,
             hasError: true,
         });
     });

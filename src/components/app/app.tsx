@@ -18,6 +18,7 @@ import app from './app.module.css';
 import Modal from "../modal/modal";
 import ProfileOrders from "../../pages/profile/profile-orders/profile-orders";
 import OrderPage from "../../pages/order-page/order-page";
+import {getUserThunk} from "../../services/slices/authSlice";
 
 const App: FC = () => {
 
@@ -36,6 +37,7 @@ const App: FC = () => {
 
     useEffect(() => {
         dispatch(fetchIngredients());
+        dispatch(getUserThunk());
     }, [dispatch]);
 
     return (

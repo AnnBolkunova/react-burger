@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk, PayloadAction} from "@reduxjs/toolkit";
 import api from "../../utils/api";
 import {checkResponse} from "../../utils/check-response";
-import {TCreatedOrder, TFetchOrder, TOrder, TOrderInfo} from "../../utils/types";
+import {TCreatedOrder, TOrder, TOrderInfo} from "../../utils/types";
 import {ThunkAPI} from "../store";
 import {fetchWithRefresh} from "../../utils/auth-helper";
 import {BASE_URL} from "../../utils/config";
@@ -11,15 +11,10 @@ interface IOrderItem {
     number: boolean
 }
 
-interface IFetchOrderResponse {
-    name: string,
-    order: IOrderItem,
-    success: boolean
-}
-
 interface IFetchOrderInfoResponse {
     name: string,
     orders: Array<TOrderInfo>,
+    orderInfo: TOrderInfo,
     success: boolean
 }
 
@@ -44,29 +39,19 @@ export const createOrderThunk = createAsyncThunk<TCreatedOrder, TOrder, ThunkAPI
     }
 );
 
-export const getOrders = createAsyncThunk<IFetchOrderResponse, TFetchOrder, ThunkAPI>(
-    "order/getOrdersThunk",
-    async (params, thunkAPI) => {
-        const res = await api.fetchOrders(params)
-            .then(checkResponse);
-
-        if (res.success) {
-            return {name: res.name, order: res.order, success: res.success} as IFetchOrderResponse;
-        } else {
-            return thunkAPI.rejectWithValue("");
-        }
-    }
-)
-
 export const fetchOrderById = createAsyncThunk<IFetchOrderInfoResponse, number, ThunkAPI>(
     'fetchOrderInfo',
     async (id, thunkAPI) => {
         const res: IFetchOrderInfoResponse = await api.fetchOrderInfo(id)
             .then(checkResponse);
-        debugger
 
         if (res.success) {
-            return {name: res.name, orders: res.orders, success: res.success} as IFetchOrderInfoResponse;
+            return {
+                name: res.name,
+                orders: res.orders,
+                orderInfo: res.orders[0],
+                success: res.success
+            } as IFetchOrderInfoResponse;
         } else {
             return thunkAPI.rejectWithValue("");
         }
@@ -83,7 +68,7 @@ type TOrderSliceState = {
     hasError: boolean;
 };
 
-const initialState: TOrderSliceState = {
+export const initialState: TOrderSliceState = {
     name: "",
     number: null,
     order: null,
@@ -121,24 +106,13 @@ const orderSlice = createSlice({
                 state.isLoading = false;
                 state.hasError = true;
             })
-            .addCase(getOrders.pending, (state) => {
-                state.isLoading = true;
-                state.hasError = false;
-            })
-            .addCase(getOrders.fulfilled, (state, action) => {
-                state.order = action.payload.order;
-            })
-            .addCase(getOrders.rejected, (state) => {
-                state.isLoading = false;
-                state.hasError = true;
-            })
             .addCase(fetchOrderById.pending, (state) => {
                 state.isLoading = true;
                 state.hasError = false;
             })
             .addCase(fetchOrderById.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.orderInfo = action.payload.orders[0];
+                state.orderInfo = action.payload.orderInfo;
                 state.hasError = false;
             })
             .addCase(fetchOrderById.rejected, (state) => {

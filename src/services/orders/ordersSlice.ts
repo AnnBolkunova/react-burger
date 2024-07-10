@@ -10,7 +10,7 @@ export type TOrdersState = {
     connectionError: string;
 };
 
-const initialState: TOrdersState = {
+export const initialState: TOrdersState = {
     connectionError: "",
 };
 
